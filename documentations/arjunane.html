@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjunane Xamarin</title>
+    <link rel="stylesheet" href="../assets/arjunane.min.css">
+    <link rel="stylesheet" href="../assets/main.min.css">
+</head>
+<body>
+    <div class="col-mx m-t-1">
+        <strong>Methods of Arjunane.cs</strong>
+        <ul>
+            <li><a href="#grid-count">Grid Count</a></li>
+        </ul>
+    </div>
+
+    <div class="col-mx">
+        Initialized Arjunane.cs
+        <pre>
+using ArjunaneXamarin;
+namespace tamVan
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class Pengaturan : ContentPage
+    {
+        Arjunane ar = new Arjunane();
+    }
+}
+        </pre>
+    </div>
+
+    <div class="col-mx" id="grid-count">
+        <h3>Grid Count</h3>
+        <div class="col-mx p-l-3">
+            <strong>Grid Count</strong> will generate Count/Index for Grid (Column and Row).<br/>
+            Methods that used for count is <strong>SetGridCount()</strong> and <strong>GetGridCount()</strong>.
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>SetGridCount
+                            <ul>
+                                <li>Integer</li>
+                            </ul>
+                        </li>
+                        <li>GetGridCount
+                            <ul>
+                                <li>Integer</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+int column = 3; <i>// How many columns did you want to set</i>
+var gridCount = ar.SetGridCount(column);
+var data = JsonConvert.DeserializeObject<YourModel[]>(ser);
+
+<i>// Let's say you have grid with name "grid"</i>
+for(int i = 0; i < data.Length; i++)
+{
+    var getCount = ar.GetGridCount(i);
+    var ini = data[i];
+    insertFrame(ini, getCount.row, getCount.column);
+}
+
+<i>
+    /*
+        Let's say variable <strong>data</strong> have 10 data and the output will :
+        {insertFrame Grid 0} {insertFrame Grid 1} {insertFrame Grid 2}
+        {insertFrame Grid 3} {insertFrame Grid 4} {insertFrame Grid 5}
+        {insertFrame Grid 6} {insertFrame Grid 7} {insertFrame Grid 8}
+        {insertFrame Grid 9}
+    */
+</i>
+
+<i>// Let's say you have a function and it will append content to the Grid</i>
+void insertFrame(M_help data, int row, int column)
+{
+    var frame = new Frame() { 
+        Padding = 10,
+    };
+
+    frame.Content = new Label()
+    {
+        Text = data.judul
+    };
+
+    var tap = new TapGestureRecognizer();
+    tap.Tapped += (s, e) => 
+    {
+        Navigation.PushAsync(new HelpDetail(data) { Title = data.judul });
+    };
+
+    frame.GestureRecognizers.Add(tap);
+
+    grid.Children.Add(frame, row, column);
+}
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

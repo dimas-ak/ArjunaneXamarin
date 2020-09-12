@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjunane Xamarin</title>
+    <link rel="stylesheet" href="../assets/arjunane.min.css">
+    <link rel="stylesheet" href="../assets/main.min.css">
+</head>
+<body>
+    <div class="col-mx m-t-1">
+        <strong>Methods of ArjunaneValidations.cs</strong>
+        <ul>
+            <li><a href="#set-rules">Set Rules</a></li>
+            <li><a href="#set-error-message">Set Error Message</a></li>
+            <li><a href="#run">Run, Run Only Keys, Run Except Keys</a></li>
+            <li><a href="#fails">Fails</a></li>
+            <li><a href="#errors">Errors</a></li>
+            <li><a href="#values">Retrieving Input</a></li>
+            <li><a href="#replace-form-list-picker">Replace Form List Picker</a></li>
+            <li><a href="#insert-form-list-picker">Insert Form List Picker</a></li>
+            <li><a href="#on-input">On Input</a></li>
+            <li><a href="#form-enabled">Form Enabled</a></li>
+            <li><a href="#form-reset-value">Form Reset Value, Form Reset Value Only Key, Form Reset Value Except Key</a></li>
+            <li><a href="#form-reset">Form Reset</a></li>
+            <li><a href="#override-errors-messages">Override All Errors Messages</a></li>
+        </ul>
+
+        <div class="col-mx">
+            Initialized ArjunaneValidations.cs
+            <pre>
+using ArjunaneXamarin;
+namespace tamVan
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class TamVanSekali : ContentPage
+    {
+        ArjunaneValidations valid = new ArjunaneValidations();
+    }
+}
+            </pre>
+        </div>
+
+        <div class="col-mx" id="set-rules">
+            <h3>Set Rules</h3>
+            <div class="col-mx">
+                <span>Arjunane Validation lets you set as many validation rules as you need for a given field, cascading them in order, and it even lets you prep and pre-process the field data at the same time. To set validation rules you will use the SetRule() method:</span>
+            </div>
+            <pre>
+valid.SetRules();
+            </pre>
+            <div class="col-mx">
+                <span>The above method takes four parameters as input (Entry and Editor) and 5 parameters for Picker:</span>
+                <ul>
+                    <li>The field name or key - the key for the input (Don't fill with same key at the sime time).</li>
+                    <li>Your Entry, Editor or Picker field.</li>
+                    <li>A “human” name for this field, which will be inserted into the error message. For example, if your field or key is named “user” you might give it a human name of “Username”.</li>
+                    <li>The validation rules for this form field.</li>
+                    <li><strong>For Picker</strong> : Your List string or keep it empty.</li>
+                </ul>
+            </div>
+            <div class="col-mx">
+                <strong>NOTE:</strong> <span><strong>SetRules</strong> only available for Entry, Editor and Picker</span>
+            </div>
+            <div class="col-mx">
+                <span>Here is an example. In your script (TamVanSekali.cs), add this code just below the validation initialization method:</span>
+            </div>
+            <pre>
+valid.SetRules("email", email_entry, "E-Mail", "required|email"); <i>// For Entry</i>
+valid.SetRules("address", address_editor, "Address", "required|max_length:150"); <i>// For Editor</i>
+
+<i>// For <strong>Picker</strong></i>
+valid.SetRules("gender", gender_picker, "Gender", "required"); <i>// For Picker</i>
+<i>// OR</i>
+List&lt;string> genders = new List&lt;string>
+{
+    "Men", "Woman"
+}; 
+valid.SetRules("gender", gender_picker, "Gender", "required", genders); <i>// For Picker</i>
+            </pre>
+        </div>
+
+        <div class="col-mx" id="set-rules">
+            <h3>Set Error Message</h3>
+            <div class="col-mx">
+                <span>By default, the Arjunane Validation class showing error messages in Indonesian language. You can either change these errors individually, change the defaults in a ArjunaneValidations.cs file, or you can <a href="#override-errors-messages">Override all the errors messages</a> with your own class.</span>
+            </div>
+            <pre>
+valid.SetErrorMessage();
+            </pre>
+            <div class="col-mx">
+                <span>The above method takes two parameters:</span>
+                <ul>
+                    <li>The field name or key that you've set in <strong>SetRules</strong>.</li>
+                    <li>Your Message</li>
+                </ul>
+            </div>
+            <div class="col-mx">
+                <span>Here is an example. In your script (TamVanSekali.cs), add this code just below the error message initialization method:</span>
+            </div>
+            <pre>
+valid.SetErrorMessage("required", "This field is required.");
+            </pre>
+            <div class="col-mx">
+                <span>If you’d like to include a field’s “human” name, or the optional parameter some rules allow for (such as min_length), you can add the <strong>{field}</strong> and <strong>{param}</strong> tags to your message, respectively:</span>
+            </div>
+            
+            <pre>
+valid.SetErrorMessage("max_length", "The {field} must have at least {param} characters.");
+            </pre>
+        </div>
+
+        <div class="col-mx" id="run">
+            <h3>Run, Run Only Keys and Run Except Keys</h3>
+            <div class="col-mx">
+                <span>Your validation rules will be loaded and used when you call the <strong>Run()</strong> method.</span>
+            </div>
+            <pre>
+valid.Run();
+            </pre>
+            <div class="col-mx">
+                <span>Your validation rules will be loaded and used when you call the <strong>RunOnlyKeys()</strong> method with <strong>ONLY</strong> keys.</span>
+            </div>
+            <pre>
+valid.RunOnlyKeys();
+            </pre>
+            <div class="col-mx">
+                <span>Your validation rules will be loaded and used when you call the <strong>RunExceptKeys()</strong> method with <strong>EXCEPT</strong> keys.</span>
+            </div>
+            <pre>
+valid.RunExceptKeys();
+            </pre>
+            <pre>
+<i>//Example</i>
+button_login.Clicked += (s, e) => 
+{
+    valid.Run();
+};
+
+button_submit.Clicked += (s, e) => 
+{
+    valid.RunOnlyKeys("email", "address", "password");
+};
+
+button_submit.Clicked += (s, e) => 
+{
+    valid.RunExceptKeys("email", "address", "password");
+};
+            </pre>
+            <div class="col-mx">
+                <span>You can use these method to checking that if the validations are succeeded or not:</span>
+            </div>
+            <pre>
+if(valid.Run())
+{
+    <i>// Success</i>
+}
+else
+{
+    <i>// Error</i>
+}
+            </pre>
+
+            <div class="col-mx">
+                <strong>NOTE:</strong> <span>You must use Button Click or Gesture Tapped to triggered the method of <strong>Run()</strong>, <strong>RunOnlyKeys().</strong> or <strong>RunExceptKeys()</strong></span>
+            </div>
+        </div>
+        <div class="col-mx" id="fails">
+            <h3>Fails</h3>
+            <div class="col-mx">
+                <span><strong>Fails</strong> method is like <a href="#run"><strong>Run</strong>, <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong></a> method, it will checking that if the validations is succeeded or not.</span>
+            </div>
+            <pre>
+if(valid.Fails())
+{
+    <i>// Error</i>
+}
+else
+{
+    <i>// Success</i>
+}
+            </pre>
+            <div class="col-mx">
+                <strong>NOTE:</strong> <span>Method <strong>Fails</strong> will be executed if the method Run are triggered.</span>
+            </div>
+        </div>
+
+        <div class="col-mx" id="errors">
+            <h3>Errors</h3>
+            <div class="col-mx">
+                <span>So, what if the incoming request parameters do not pass the given validation rules? This method will showing the error message and when there's  nothing error on it, the result of error will be <strong>null</strong>.</span>
+            </div>
+            <pre>
+if(valid.Fails())
+{
+    var err = valid.Errors();
+    if(err["email"] != null) label_error_email.Text = err["email"];
+    if(err["password"] != null) label_error_password.Text = err["password"];
+}
+            </pre>
+        </div>
+
+        <div class="col-mx" id="replace-form-list-picker">
+            <h3>Replace Form List Picker</h3>
+            <div class="col-mx">
+                <span>This method will changing (Replaced) the value of the <strong>Picker</strong> that you have been set previously.</span>
+            </div>
+            <pre>
+list.Clear();
+list.Add("Male");
+list.Add("Female");
+
+valid.ReplaceFormPickerList("gender", list);
+            </pre>
+            <div class="col-mx">
+                <span>The above method takes two parameters:</span>
+                <ul>
+                    <li>The field name or key that you've set in <strong>SetRules</strong>.</li>
+                    <li>Your new list.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-mx" id="values">
+            <h3>Retrieving Input</h3>
+            <div class="col-mx">
+                <span>You may also retrieve all of the input data as an Dictionary&lt;string, string> using the <strong>All</strong> method:</span>
+            </div>
+            <pre>
+valid.All();
+
+//<i>Or you can combine with Web Request</i>
+
+var form = webs.GetURL("your-url");
+form.AddFields(valid.All());
+webs.SendWebForm( (is_success, result, error) => {
+    if(is_success)
+    {
+        <i>// Your action or Serialized <strong>result</strong> JSON</i>
+    }
+    else
+    {
+        <i>// Handle the Error or DisplayAlert("Error", error, "OK");</i>
+    }
+});
+            </pre>
+            <div class="col-mx">
+                <strong>NOTE:</strong> the method <strong>All</strong> take one parameter (boolean and the default is <strong>false</strong>), when you call <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong> and you want get all input even if you call thats method, just set it to <strong>true</strong>
+            </div>
+        </div>
+
+        <div class="col-mx" id="replace-form-list-picker">
+            <h3>Replace Form List Picker</h3>
+            <div class="col-mx">
+                <span>This method will changing (Replaced) the value of the <strong>Picker</strong> that you have been set previously.</span>
+            </div>
+            <pre>
+list.Clear();
+list.Add("Male");
+list.Add("Female");
+
+valid.ReplaceFormPickerList("gender", list);
+            </pre>
+            <div class="col-mx">
+                <span>The above method takes two parameters:</span>
+                <ul>
+                    <li>The field name or key that you've set in <strong>SetRules</strong>.</li>
+                    <li>Your new list.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-mx" id="insert-form-list-picker">
+            <h3>Insert Form List Picker</h3>
+            <div class="col-mx">
+                <span>This method will insert (adding) the value of the <strong>Picker</strong> that you have been set previously.</span>
+            </div>
+            <pre>
+list.Clear();
+list.Add("Pekalongan");
+list.Add("Kajen");
+
+valid.InsertFormPickerList("location", list);
+            </pre>
+            <div class="col-mx">
+                <span>The above method takes two parameters:</span>
+                <ul>
+                    <li>The field name or key that you've set in <strong>SetRules</strong>.</li>
+                    <li>Your list that you've adding before.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-mx" id="on-input">
+            <h3>On Input</h3>
+            <div class="col-mx">
+                <span><strong>OnInput</strong> is raised whenever the Text of the <strong>Entry</strong> or <strong>Editor</strong> changes.</span>
+            </div>
+            <pre>
+valid.OnInput("email", (error) => {
+    if(error != null)
+    {
+        <i>// Handle the error</i>
+    }
+    else
+    {
+        <i>// Nothing error</i>
+    }
+});
+            </pre>
+            <div class="col-mx">
+                <span>The above method take one parameter and action:</span>
+                <ul>
+                    <li>The field name or key that you've set in <strong>SetRules</strong>.</li>
+                    <li>Get the error from your key.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-mx" id="form-enabled">
+            <h3>Form Enabled</h3>
+            <div class="col-mx">
+                <span>Method <strong>FormEnabled</strong> is used to Enabled or Disabled the fields. Sometimes, you have a scenario in accessing to server and before accessing the server you want to disabled all fields to avoid from user to change the value of fields, and enabled all fields when you get data from the server.</span>
+            </div>
+            <pre>
+button_login += (s ,e) => {
+    valid.<strong>FormEnabled</strong>(false);
+    webs.SendWeb( (is_success, result, error) => {
+        ...
+        valid.<strong>FormEnabled</strong>(true);
+    });
+};
+            </pre>
+            <div class="col-mx">
+                <span>The above method takes two parameters:</span>
+                <ul>
+                    <li>Boolean <strong>true</strong> for enabled all fields and <strong>false</strong> to disabled all fields.</li>
+                    <li>Boolean to get all fields when you use <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong>, <i>Default</i> is <strong>false</strong>.</li>
+                </ul>
+            </div>
+            <div class="col-mx">
+                <strong>NOTE:</strong> <span>When you use <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong>, the <strong>FormEnabled</strong> ONLY will enabled or disabled the fields with key that you sign at <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong>. Just set it to <strong>true</strong> to enabled or disabled all fields even you use <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong>.</span>
+            </div>
+            <pre>
+button_login += (s ,e) => {
+    valid.<strong>FormEnabled</strong>(false, <strong>true</strong>);
+    webs.SendWeb( (is_success, result, error) => {
+        ...
+        valid.<strong>FormEnabled</strong>(true, <strong>true</strong>);
+    });
+};
+            </pre>
+        </div>
+
+        <div class="col-mx" id="form-reset-value">
+            <h3>Form Reset Value</h3>
+            <div class="col-mx">
+                <span>Method <strong>FormResetValue</strong> is used to reset or make all fields value to null or empty.</span>
+            </div>
+            <pre>
+button_login += (s ,e) => {
+    
+    webs.SendWeb( (is_success, result, error) => {
+        ...
+        valid.FormResetValue();
+    });
+};
+            </pre>
+            <div class="col-mx">
+                <span>The above method take one parameter:</span>
+                <ul>
+                    <li>Boolean <strong>true</strong> to reset all fields even if you use <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong>,and <strong>false</strong> to reset all fields. <i>Default</i> is <strong>false</strong></li>
+                </ul>
+            </div>
+
+            <h3>Form Reset Value Only Keys</h3>
+            <div class="col-mx">
+                <span>Method <strong>FormResetValueOnlyKeys</strong> is used to reset or make all fields value to null or empty ONLY key that you have set in <strong>SetRules</strong>.</span>
+            </div>
+            <pre>
+button_login += (s ,e) => {
+    
+    webs.SendWeb( (is_success, result, error) => {
+        ...
+        valid.<strong>FormResetValueOnlyKeys</strong>("password", "username");
+    });
+};
+            </pre>
+
+            <h3>Form Reset Value Except Keys</h3>
+            <div class="col-mx">
+                <span>Method <strong>FormResetValueOnlyKeys</strong> is used to reset or make all fields value to null or empty ONLY except key that you have set in <strong>SetRules</strong>.</span>
+            </div>
+            <pre>
+button_login += (s ,e) => {
+    
+    webs.SendWeb( (is_success, result, error) => {
+        ...
+        valid.<strong>FormResetValueExceptKeys</strong>("email");
+    });
+};
+            </pre>
+            <div class="col-mx">
+                <strong>NOTE:</strong><span> <strong>FormResetValueExceptKeys</strong> or <strong>FormResetValueOnlyKeys</strong> will accessing all fields even if you use <strong>RunOnlyKeys</strong> or <strong>RunExceptKeys</strong></span>
+            </div>
+        </div>
+
+        <div class="col-mx" id="form-reset">
+            <h3>Form Reset</h3>
+            <div class="col-mx">
+                <span>Method <strong>FormReset</strong> is used to reset all rules because maybe you have a scenario that you should renew all rules with another fields.</span>
+            </div>
+            <pre>
+valid.FormReset();
+            </pre>
+        </div>
+
+        <div class="col-mx" id="override-errors-messages">
+            <h3>Override Errors Messages</h3>
+            <div class="col-mx">
+                <span>Sometimes you want to override all errors message with your custom message. It's very easy, just create a new Class and named whatever you want. Example :</span>
+            </div>
+            <pre>
+public class MY_Validation : ArjunaneValidations
+{
+
+    readonly Dictionary&lt;string, string> form_errors = new Dictionary&lt;string, string> {
+        
+        { "ip",                 "{field} tidak valid." },
+        { "gt",                 "{field} harus lebih besar dari {param}." },
+        { "lt",                 "{field} harus lebih kecil dari {param}." },
+        { "gte",                "{field} harus lebih besar dari sama dengan {param}." },
+        { "lte",                "{field} harus lebih kecil dari sama dengan {param}." },
+        { "max",                "Maksimal Angka dari {field} ialah {param}." },
+        { "min",                "Minimal Angka dari {field} ialah {param}." },
+        { "url",                "{field} tidak valid." },
+        { "ipv4",               "{field} tidak valid." },
+        { "ipv6",               "{field} tidak valid." },
+        { "json",               "{field} tidak valid." },
+        { "name",               "{field} tidak valid." },
+        { "same",               "{field} tidak sama dengan {param}." },
+        { "email",              "{field} tidak valid." },
+        { "regex",              "{field} tidak valid." },
+        { "alpha",              "{field} hanya boleh diisi dengan Alphabet." },
+        { "integer",            "{field} tidak valid." },
+        { "numeric",            "{field} tidak valid." },
+        { "boolean",            "{field} tidak valid." },
+        { "required",           "{field} harap diisi." },
+        { "in_array",           "{field} tidak valid." },
+        { "ends_with",          "{field} harus diakhiri dengan {param}." },
+        { "different",          "{field} tidak boleh sama dengan {param}." },
+        { "not_regex",          "{field} tidak valid." },
+        { "max_length",         "Maksimal Karakter untuk {field} ialah {param}." },
+        { "min_length",         "Minimal Karakter untuk {field} ialah {param}." },
+        { "alpha_dash",         "{field} hanya boleh diisi dengan Alphabet dan Garis." },
+        { "starts_with",        "{field} harus diawali dengan {param}." },
+        { "required_if",        "{field} harus diisi." },
+        { "not_in_array",       "{field} tidak valid." },
+        { "alpha_numeric",      "{field} hanya boleh diisi dengan Alphabet dan Angka." },
+        { "alpha_numeric_dash", "{field} hanya boleh diisi dengan Alphabet, Angka dan Garis." },
+    };
+    public override Dictionary&lt;string, string> OverrideErrorsMessage()
+    {
+        return form_errors;
+    }
+}
+            </pre>
+            <div class="col-mx">
+                <span>Call your class that you already had create then:</span>
+            </div>
+            <pre>
+public partial class tamVan : ContentPage
+{
+    MY_Validation valid = new MY_Validation();
+    public tamVan()
+    {
+        valid.SetRules(...);
+    } 
+}
+            </pre>
+        </div>
+
+        <h3>Available Validation Rules</h3>
+        <div class="col-mx">
+            <span>Below is a list of all available validation rules and their function:</span>
+        </div>
+        <div class="col-mx col-md-7 collection-list">
+            <a href="#alpha">Alpha</a>
+            <a href="#alpha-dash">Alpha Dash</a>
+            <a href="#alpha-numeric">Alpha Numeric</a>
+            <a href="#alpha-numeric-dash">Alpha Numeric Dash</a>
+            <a href="#boolean">Boolean</a>
+            <a href="#different">Different</a>
+            <a href="#email">E-Mail</a>
+            <a href="#ends-with">Ends With</a>
+            <a href="#greater-than">Greater Than</a>
+            <a href="#greater-than-equal">Greater Than or Equal</a>
+            <a href="#in-array">In Array</a>
+            <a href="#integer">Integer</a>
+            <a href="#ip">IP</a>
+            <a href="#ipv4">IPv4</a>
+            <a href="#ipv6">IPv6</a>
+            <a href="#json">json</a>
+            <a href="#lower-than">Lower Than</a>
+            <a href="#lower-than-equal">Lower Than or Equal</a>
+            <a href="#max">Max</a>
+            <a href="#min">Min</a>
+            <a href="#max-length">Max Length</a>
+            <a href="#min-length">Min Length</a>
+            <a href="#name">Name</a>
+            <a href="#not-in-array">Not In Array</a>
+            <a href="#numeric">Numeric</a>
+            <a href="#required">Required</a>
+            <a href="#required-if">Required If</a>
+            <a href="#regex">Regex</a>
+            <a href="#same">Same</a>
+            <a href="#starts-with">Starts With</a>
+            <a href="#url">URL</a>
+        </div>
+
+        <h3 id="alpha">alpha</h3>
+        <div class="col-mx">
+            <span>The field under validation must be entirely alphabetic characters.</span>
+        </div>
+
+        <h3 id="alpha-dash">alpha_dash</h3>
+        <div class="col-mx">
+            <span>The field under validation may have alpha characters, as well as dashes and underscores.</span>
+        </div>
+
+        <h3 id="alpha-numeric">alpha_numeric</h3>
+        <div class="col-mx">
+            <span>The field under validation may have alpha characters and numeric.</span>
+        </div>
+
+        <h3 id="alpha-numeric-dash">alpha_numeric_dash</h3>
+        <div class="col-mx">
+            <span>The field under validation may have alpha characters and numeric, as well as dashes and underscores</span>
+        </div>
+
+        <h3 id="alpha-dash">boolean</h3>
+        <div class="col-mx">
+            <span>The field under validation must be able to be cast as a boolean. Accepted input are <strong>true</strong> and <strong>false</strong>.</span>
+        </div>
+
+        <h3 id="different">different:field</h3>
+        <div class="col-mx">
+            <span>The field under validation must have a different value than field.</span>
+        </div>
+
+        <h3 id="email">email</h3>
+        <div class="col-mx">
+            <span>The field under validation must be formatted as an e-mail address.</span>
+        </div>
+
+        <h3 id="ends-with">ends_with:tamvan,dan,berani,...</h3>
+        <div class="col-mx">
+            <span>The field under validation must end with one of the given values.</span>
+        </div>
+
+        <h3 id="greater-than">gt:field</h3>
+        <div class="col-mx">
+            <span>The field under validation must be greater than the given field. The two fields must be of the same type. Strings and numerics are evaluated using the same conventions as the size rule.</span>
+        </div>
+
+        <h3 id="greater-than-equal">gte:field</h3>
+        <div class="col-mx">
+            <span>The field under validation must be greater than or equal to the given field. The two fields must be of the same type. Strings and numerics are evaluated using the same conventions as the size rule.</span>
+        </div>
+
+        <h3 id="in-array">in_array:tamvan,dan,berani,...</h3>
+        <div class="col-mx">
+            <span>The field under validation must be included in the given list of values.</span>
+        </div>
+
+        <h3 id="integer">integer</h3>
+        <div class="col-mx">
+            <span>The field under validation must be an integer.</span>
+        </div>
+
+        <h3 id="ip">ip</h3>
+        <div class="col-mx">
+            <span>The field under validation must be an IP address.</span>
+        </div>
+
+        <h3 id="ipv4">ipv4</h3>
+        <div class="col-mx">
+            <span>The field under validation must be an IPv4 address.</span>
+        </div>
+
+        <h3 id="ipv6">ipv6</h3>
+        <div class="col-mx">
+            <span>The field under validation must be an IPv6 address.</span>
+        </div>
+
+        <h3 id="json">json</h3>
+        <div class="col-mx">
+            <span>The field under validation must be a valid JSON string.</span>
+        </div>
+
+        <h3 id="lower-than">lt</h3>
+        <div class="col-mx">
+            <span>The field under validation must be lower than the given field. The two fields must be of the same type. Strings and numerics are evaluated using the same conventions as the size rule.</span>
+        </div>
+
+        <h3 id="lower-than">lte</h3>
+        <div class="col-mx">
+            <span>The field under validation must be lower than or equal to the given field. The two fields must be of the same type. Strings and numerics are evaluated using the same conventions as the size rule.</span>
+        </div>
+
+        <h3 id="max">max:value</h3>
+        <div class="col-mx">
+            <span>The field under validation must be less than or equal to a maximum value. Strings and numerics are evaluated in the same fashion as the size rule.</span>
+        </div>
+
+        <h3 id="min">min:value</h3>
+        <div class="col-mx">
+            <span>The field under validation must have a minimum value. Strings and numerics are evaluated in the same fashion as the size rule.</span>
+        </div>
+
+        <h3 id="max-length">max_length:value</h3>
+        <div class="col-mx">
+            <span>The field under validation must be less than or equal to a maximum value. Strings and numerics are evaluated in the same fashion as the size rule.</span>
+        </div>
+
+        <h3 id="min-length">min_length:value</h3>
+        <div class="col-mx">
+            <span>The field under validation must have a minimum value. Strings and numerics are evaluated in the same fashion as the length rule.</span>
+        </div>
+
+        <h3 id="name">name</h3>
+        <div class="col-mx">
+            <span>The field under validation must have a value with human's name. Example :</span>
+            <div class="col-mx">
+                <span class="bg-w2">De'mentu, S. Pd</span>
+            </div>
+        </div>
+
+        <h3 id="not-in-array">not_in_array:tamvan,dan,berani,...</h3>
+        <div class="col-mx">
+            <span>The field under validation must not be included in the given list of values.</span>
+        </div>
+
+        <h3 id="not-regex">not_regex:pattern</h3>
+        <div class="col-mx">
+            <div class="col-mx">
+                <span>The field under validation must not match the given regular expression.</span>
+            </div>
+            <div class="col-mx">
+                <span>Internally, this rule uses the C# Regex function. The pattern specified should obey the same formatting required by Regex and thus also include valid delimiters. For example:</span>
+            </div>
+            <div class="col-mx">
+                <span class="bg-w2 p-1">"not_regex:^[a-zA-Z0-9]*$"</span>
+            </div>
+            <div class="col-mx">
+                <span>Note: When using the regex / not_regex patterns, it may be necessary to specify rules in an array instead of using pipe delimiters, especially if the regular expression contains a pipe character.</span>
+            </div>
+        </div>
+
+        <h3 id="nullable">nullable</h3>
+        <div class="col-mx">
+            <span>The field under validation may be null. This is particularly useful when validating primitive such as strings and integers that can contain null values.</span>
+        </div>
+
+        <h3 id="numeric">numeric</h3>
+        <div class="col-mx">
+            <span>The field under validation must be numeric.</span>
+        </div>
+
+        <h3 id="regex">regex:pattern</h3>
+        <div class="col-mx">
+            <div class="col-mx">
+                <span>The field under validation must match the given regular expression.</span>
+            </div>
+            <div class="col-mx">
+                <span>Internally, this rule uses the C# Regex function. The pattern specified should obey the same formatting required by Regex and thus also include valid delimiters. For example:</span>
+            </div>
+            <div class="col-mx">
+                <span class="bg-w2 p-1">"not_regex:^[a-zA-Z0-9]*$"</span>
+            </div>
+            <div class="col-mx">
+                <span>Note: When using the regex / not_regex patterns, it may be necessary to specify rules in an array instead of using pipe delimiters, especially if the regular expression contains a pipe character.</span>
+            </div>
+        </div>
+
+        <h3 id="required">required</h3>
+        <div class="col-mx">
+            <span>The field under validation must be present in the input data and not empty. A field is considered "empty" if one of the following conditions are true:</span>
+            <ul>
+                <li>The value is <strong>null</strong>.</li>
+                <li>The value is an empty string.</li>
+            </ul>
+        </div>
+
+        <h3 id="required-if">required_if:field</h3>
+        <div class="col-mx">
+            <span>The field under validation must be present and not empty if the another field is not empty.</span>
+        </div>
+
+        <h3 id="same">same:field</h3>
+        <div class="col-mx">
+            <span>The given field must match the field under validation.</span>
+        </div>
+
+        <h3 id="starts-with">starts_with:tamvan,dan,berani,...</h3>
+        <div class="col-mx">
+            <span>The field under validation must start with one of the given values.</span>
+        </div>
+
+        <h3 id="starts-with">url</h3>
+        <div class="col-mx">
+            <span>The field under validation must be a valid URL.</span>
+        </div>
+    </div>
+</body>
+</html>

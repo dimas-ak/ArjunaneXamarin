@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjunane Xamarin</title>
+    <link rel="stylesheet" href="../assets/arjunane.min.css">
+    <link rel="stylesheet" href="../assets/main.min.css">
+</head>
+<body>
+    <div class="col-mx m-t-1">
+        <strong>Methods of ArjunaneWebRequest.cs</strong>
+        <ul>
+            <li><a href="#is-connected">Is Connected Internet</a></li>
+            <li><a href="#get-url">Get URL</a></li>
+            <li><a href="#add-field">Add Field</a></li>
+            <li><a href="#add-fields">Add Fields</a></li>
+            <li><a href="#add-file">Add File</a></li>
+            <li><a href="#send-web-request">Send Web Request</a></li>
+            <li><a href="#send-web-form">Send Web Form</a></li>
+            <li><a href="#send-web-form-multipart">Send Web Form Multipart</a></li>
+            <li><a href="#download-data">Download Data</a></li>
+        </ul>
+    </div>
+
+    <div class="col-mx">
+        Initialized ArjunaneWebRequest.cs
+        <pre>
+using ArjunaneXamarin;
+namespace tamVan
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class TamVanSekali : ContentPage
+    {
+        ArjunaneWebRequest webs = new ArjunaneWebRequest();
+    }
+}
+        </pre>
+    </div>
+
+    <!-- ISCONNECTEDD -->
+    <div class="col-mx" id="is-connected">
+        <h3>Is Connected Internet</h3>
+        <div class="col-mx p-l-3">
+            <strong>IsConnectedIternet()</strong> is for checking the internet.<br/>
+            <ul>
+                <li>Return
+                    <ul>
+                        <li>Boolean</li>
+                    </ul>
+                </li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+bool is_connect = webs.IsConnectedInternet();
+if(is_connect)
+{
+    <i>// Internet is available</i>
+}
+else
+{
+    <i>// Internet not available</i>
+}
+            </pre>
+        </div>
+    </div>
+
+    <!-- GET URL -->
+    <div class="col-mx" id="get-url">
+        <h3>Get URL</h3>
+        <div class="col-mx p-l-3">
+            <strong>GetURL()</strong> is for set URL to Request.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>String</li>
+                    </ul>
+                </li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+webs.GetURL("https://your-url.com");
+            </pre>
+        </div>
+    </div>
+
+    <!-- ADD FIELD -->
+    <div class="col-mx" id="add-field">
+        <h3>Add Field</h3>
+        <div class="col-mx p-l-3">
+            <strong>AddField()</strong> is for adding data to Request.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>String</li>
+                        <li>String</li>
+                    </ul>
+                </li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+webs.AddField("username", entry_username.Text);
+webs.AddField("password", entry_password.Text);
+            </pre>
+        </div>
+    </div>
+
+    <!-- ADD FIELDS -->
+    <div class="col-mx" id="add-fields">
+        <h3>Add Fields</h3>
+        <div class="col-mx p-l-3">
+            <strong>AddFields()</strong> is for adding data to Request.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>Dictionary < string,string ></li>
+                    </ul>
+                </li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+Dictionary< string, string> dict = new Dictionary< string, string>();
+
+dict.Add("username", entry_username.Text);
+dict.Add("password", entry_password.Text);
+
+webs.AddFields(dict);
+            </pre>
+        </div>
+    </div>
+
+    <!-- ADD FILE -->
+    <div class="col-mx" id="add-file">
+        <h3>Add File</h3>
+        <div class="col-mx p-l-3">
+            <strong>AddFile()</strong> is for adding file to Request.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>Stream</li>
+                    </ul>
+                </li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+webs.AddFile("photo", stream_photo);
+webs.AddFile("video", stream_video);
+            </pre>
+        </div>
+    </div>
+
+    <!-- SEND WEB REQUEST -->
+    <div class="col-mx" id="send-web-request">
+        <h3>Send Web Request</h3>
+        <div class="col-mx p-l-3">
+            <strong>SendWebRequest()</strong> is for sending the Request.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>Action
+                            <ul>
+                                <li>Boolean</li>
+                                <li>String</li>
+                                <li>String</li>
+                            </ul>
+                        </li>
+                        <li>Integer (Timeout) : Default is 30 seconds</li>
+                    </ul>
+                </li>
+                <li>Method : GET</li>
+            </ul>
+            <strong>Example 1 :</strong>
+            <pre>
+int timeout = 25; <i>// 25 seconds</i>
+
+webs.GetURL("https://your-url.com");
+webs.SendWebRequest( (is_success, result, error) => {
+    <i>
+        /*
+            Type is_success : Boolean
+            Type result     : String
+            Type error      : String
+        */
+    </i>
+    if(is_success)
+    {
+        <i>// Your action or Serialized <strong>result</strong> JSON</i>
+    }
+    else
+    {
+        <i>// Handle the Error or DisplayAlert("Error", error, "OK");</i>
+    }
+}, timeout); <i>// You can leave the <strong>timeout</strong> to empty because the default for <strong>timeout</strong> is 30 seconds</i>
+            </pre>
+            <strong>Example 2 :</strong>
+            <pre>
+
+webs.GetURL("https://your-url.com");
+webs.AddField("api_key", "your-api-key");
+webs.AddField("api_id", "your-api-id");
+<i>
+    /* 
+        It will send to the Server with Request
+        https://your-url.com?api_key=your-api-key&api_id=your-api-id
+    */
+</i>
+webs.SendWebRequest( (is_success, result, error) => {
+    if(is_success)
+    {
+        <i>// Your action or Serialized <strong>result</strong> JSON</i>
+    }
+    else
+    {
+        <i>// Handle the Error or DisplayAlert("Error", error, "OK");</i>
+    }
+});
+            </pre>
+        </div>
+    </div>
+    
+    <!-- SEND WEB FORM -->
+    <div class="col-mx" id="send-web-form">
+        <h3>Send Web Form</h3>
+        <div class="col-mx p-l-3">
+            <strong>SendWebForm()</strong> is for sending the Request form.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>Action
+                            <ul>
+                                <li>Boolean</li>
+                                <li>String</li>
+                                <li>String</li>
+                            </ul>
+                        </li>
+                        <li>Integer (Timeout) : Default is 30 seconds</li>
+                        <li>String (Method) : Default is "POST"</li>
+                        <li>String (Content Type) : Default is "application/x-www-form-urlencoded"</li>
+                    </ul>
+                </li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+webs.GetURL("https://your-url.com");
+webs.AddField("username", entry_username.Text);
+webs.AddField("password", entry_password.Text);
+webs.SendWebForm( (is_success, result, error) => {
+    if(is_success)
+    {
+        <i>// Your action or Serialized <strong>result</strong> JSON</i>
+    }
+    else
+    {
+        <i>// Handle the Error or DisplayAlert("Error", error, "OK");</i>
+    }
+});
+            </pre>
+        </div>
+    </div>
+
+    <!-- SEND WEB FORM MULTIPART-->
+    <div class="col-mx" id="send-web-form-multipart">
+        <h3>Send Web Form Multipart</h3>
+        <div class="col-mx p-l-3">
+            <strong>SendWebFormMultipart()</strong> is for sending the Request form with File.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>Action
+                            <ul>
+                                <li>Boolean</li>
+                                <li>String</li>
+                                <li>String</li>
+                            </ul>
+                        </li>
+                        <li>Integer (Timeout) : Default is 30 seconds</li>
+                    </ul>
+                </li>
+                <li>Method : POST</li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+webs.GetURL("https://your-url.com");
+webs.AddField("name", entry_name.Text);
+webs.AddField("email", entry_email.Text);
+webs.AddFile("photo", Stream_photo);
+webs.SendWebFormMultipart( (is_success, result, error) => {
+    if(is_success)
+    {
+        <i>// Your action or Serialized <strong>result</strong> JSON</i>
+    }
+    else
+    {
+        <i>// Handle the Error or DisplayAlert("Error", error, "OK");</i>
+    }
+});
+            </pre>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD DATA-->
+    <div class="col-mx" id="download-data">
+        <h3>Download Data</h3>
+        <div class="col-mx p-l-3">
+            <strong>DownloadData()</strong> is for download data from the server.<br/>
+            <ul>
+                <li>Parameter
+                    <ul>
+                        <li>Action
+                            <ul>
+                                <li>DownloadDatas Class
+                                    <ul>
+                                        <li>url (string) : Default is null <strong>(Required)</strong></li>
+                                        <li>file_name (string) : Default is null</li>
+                                        <li>folder_directory (string) : Default is "DownloadData"</li>
+                                        <li>timeout (int) : Default is 60 seconds</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            Action
+                            <ul>
+                                <li>Boolean</li>
+                                <li>String</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Action
+                            <ul>
+                                <li>Boolean</li>
+                                <li>Double</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>Method : POST</li>
+            </ul>
+            <strong>Example :</strong>
+            <pre>
+webs.DownloadData( (data) => {
+    data.url = "https://your-url.com/download/image.jpg";
+    data.folder_directory = "tamVan"; <i>// It will create a folder with name <strong>tamVan</strong> and it will save the file into it.</i>
+    <i>// data.file_name = "photo.jpg"; // Leave the <strong>file_name</strong> Empty and it will create file with name of your URL request (In this case is image.jpg).
+       // data.timeout = 30;</i> 
+}, (is_success, error) => {
+    <i>/*
+            Type is_success : Boolean
+            Type error : String
+        */</i>
+    if(!is_success)
+    {
+        <i>// Handle the Error</i>
+    }
+}, (is_done, progress) => {
+    <i>/*
+            Type is_done : Boolean
+            Type progress : Double
+        */</i>
+    if(is_done)
+    {
+        <i>// Successfully Download 100%</i>
+        <i>// You can find the file on <strong>tamVan</strong> folder's</i>
+    }
+    else
+    {
+        <i>// Your handle <strong>progress</strong> download (0-99%)</i>
+    }
+});
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

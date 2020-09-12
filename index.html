@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjunane Xamarin</title>
+    <link rel="stylesheet" href="assets/arjunane.min.css">
+    <link rel="stylesheet" href="assets/main.min.css">
+</head>
+<body>
+    <div class="container hg-1">
+        <h1 class="center">-=[Arjunane Xamarin]=-</h1>
+        <div class="col-mx">
+            <strong>Arjunane Xamarin</strong> is simple Library for Xamarin Forms (C#).
+        </div>
+        <div class="col-btn">
+            <div class="cb aktif" data="documentations/arjunane.html">Arjunane</div>
+            <div class="cb" data="documentations/arjunaneWebRequest.html">Arjunane Web Request</div>
+            <div class="cb" data="documentations/arjunaneValidations.html">Arjunane Validations</div>
+        </div>
+        <div id="iframe-container">
+            <iframe id="iframe" src="documentations/arjunane.html" frameborder="0" style="width:100%;height:100%;"></iframe>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var cb      = document.getElementsByClassName("cb");
+        var iframe  = document.getElementById("iframe");
+
+        function removeClass()
+        {
+            for(var i = 0; i < cb.length; i++) cb[i].classList.remove("aktif"); 
+        }
+
+        for(var i = 0; i < cb.length; i++) 
+        {
+            cb[i].addEventListener("click", function () {
+                if(!this.classList.contains("aktif"))
+                {
+                    removeClass();
+                    this.classList.add("aktif");
+                    iframe.src = this.getAttribute("data");
+                }
+            });
+        }
+
+    </script>
+
+</body>
+</html>
