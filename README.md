@@ -11,10 +11,6 @@ Simple Library for Xamarin Forms
 $ git clone https://github.com/dimas-ak/ArjunaneXamarin.git
 ```
 
-Documentation : [Click Here](https://dimas-ak.web.app/documentation/ArjunaneXamarin)
-
-[Find More](https://dimas-ak.web.app)
-
 ## Contact
 
 You can contact me at the [E-Mail](mailto:dimas.awang.kusuma@gmail.com) or [FB](https://www.facebook.com/arjunane.co.id)
